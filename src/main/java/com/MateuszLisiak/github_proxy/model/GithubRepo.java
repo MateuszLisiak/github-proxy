@@ -1,22 +1,20 @@
 package com.MateuszLisiak.github_proxy.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
-public class GithubRepo {
-    @JsonProperty("full_name")
-    private String fullName;
-    private String description;
+public record GithubRepo(
+        @JsonProperty("full_name")
+        String fullName,
 
-    @JsonProperty("clone_url")
-    private String cloneUrl;
+        String description,
 
-    @JsonProperty("stargazers_count")
-    private Integer stars;
+        @JsonProperty("clone_url")
+        String cloneUrl,
 
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
-}
+        @JsonProperty("stargazers_count")
+        Integer stars,
+
+        @JsonProperty("created_at")
+        LocalDateTime createdAt
+) {}

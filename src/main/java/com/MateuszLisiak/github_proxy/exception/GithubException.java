@@ -1,4 +1,4 @@
-package com.MateuszLisiak.github_proxy;
+package com.MateuszLisiak.github_proxy.exception;
 
 import lombok.Getter;
 @Getter

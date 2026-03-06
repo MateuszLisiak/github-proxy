@@ -1,7 +1,7 @@
 package com.MateuszLisiak.github_proxy.service;
 
 import com.MateuszLisiak.github_proxy.client.GithubClient;
-import com.MateuszLisiak.github_proxy.model.Dto.RepoDto;
+import com.MateuszLisiak.github_proxy.model.dto.RepoDto;
 import com.MateuszLisiak.github_proxy.mapper.RepoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

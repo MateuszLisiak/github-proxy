@@ -1,5 +1,6 @@
 package com.MateuszLisiak.github_proxy;
 
+import com.MateuszLisiak.github_proxy.exception.GithubException;
 import feign.FeignException;
 import feign.Response;
 import feign.RetryableException;
