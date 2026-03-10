@@ -1,8 +1,11 @@
 package com.MateuszLisiak.github_proxy.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+
 import java.time.LocalDateTime;
 
+@Builder
 public record GithubRepo(
         @JsonProperty("full_name")
         String fullName,
@@ -17,4 +20,5 @@ public record GithubRepo(
 
         @JsonProperty("created_at")
         LocalDateTime createdAt
-) {}
+) {
+}
