@@ -1,6 +1,5 @@
 package com.MateuszLisiak.github_proxy.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +23,7 @@ public class Repo {
     private Integer stars;
     private LocalDateTime createdAt;
     private String owner;
-    private String name;
+    private String repositoryName;
 
     public void update(GithubRepo repo, String owner, String repoName) {
         this.fullName = repo.fullName();
@@ -33,6 +32,19 @@ public class Repo {
         this.stars = repo.stars();
         this.createdAt = repo.createdAt();
         this.owner = owner;
-        this.name = repoName;
+        this.repositoryName = repoName;
+    }
+
+    public void setOwnerAndRepositoryName(GithubRepo githubRepo) {
+        this.owner = getOwnerNameFromFullName(githubRepo.fullName());
+        this.repositoryName = getRepositoryNameFromFullName(githubRepo.fullName());
+    }
+
+    private String getOwnerNameFromFullName(String fullName) {
+        return fullName.split("/")[0];
+    }
+
+    private String getRepositoryNameFromFullName(String fullName) {
+        return fullName.split("/")[1];
     }
 }

@@ -1,13 +1,13 @@
 package com.MateuszLisiak.github_proxy.configuration;
 
-import com.MateuszLisiak.github_proxy.exception.GithubException;
 import feign.FeignException;
 import feign.Response;
 import feign.RetryableException;
 import feign.codec.ErrorDecoder;
-import org.springframework.http.HttpStatus;
 
-public class Custom5xxErrorDecoder implements ErrorDecoder {
+public class GithubErrorDecoder implements ErrorDecoder {
+    private final ErrorDecoder defaultErrorDecoder = new Default();
+
     @Override
     public Exception decode(String methodKey, Response response) {
         FeignException exception = feign.FeignException.errorStatus(methodKey, response);
@@ -21,6 +21,6 @@ public class Custom5xxErrorDecoder implements ErrorDecoder {
                     50L,
                     response.request());
         }
-        return new GithubException(exception.getMessage(), statusCode, HttpStatus.valueOf(statusCode));
+        return defaultErrorDecoder.decode(methodKey, response);
     }
 }

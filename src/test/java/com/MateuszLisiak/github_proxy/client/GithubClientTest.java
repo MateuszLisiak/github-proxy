@@ -55,12 +55,12 @@ public class GithubClientTest {
     @Test
     void getUserRepo_NotFound_ShouldThrowGithubException() {
         //given
-        wireMockServer.stubFor(get("/repos/owner/name")
+        wireMockServer.stubFor(get("/repos/owner/repositoryName")
                 .willReturn(aResponse().withStatus(404)));
         //when
         GithubException exception = assertThrows(
                 GithubException.class,
-                () -> client.getUserRepo("owner", "name")
+                () -> client.getUserRepo("owner", "repositoryName")
         );
         //then
         assertAll(
@@ -71,10 +71,10 @@ public class GithubClientTest {
 
     @Test
     void getUserRepo_ServiceUnavailable_ShouldThrowRetryableException() {
-        wireMockServer.stubFor(get("/repos/owner/name")
+        wireMockServer.stubFor(get("/repos/owner/repositoryName")
                 .willReturn(aResponse().withStatus(503)));
         RetryableException exception = assertThrows(RetryableException.class,
-                () -> client.getUserRepo("owner", "name"));
+                () -> client.getUserRepo("owner", "repositoryName"));
         assertAll(
                 () -> assertEquals(503, exception.status())
         );
@@ -83,12 +83,12 @@ public class GithubClientTest {
     @Test
     void getUserRepo_ServerError_ShouldThrowGithubException() {
         //given
-        wireMockServer.stubFor(get("/repos/owner/name")
+        wireMockServer.stubFor(get("/repos/owner/repositoryName")
                 .willReturn(aResponse().withStatus(500)));
         //when
         GithubException exception = assertThrows(
                 GithubException.class,
-                () -> client.getUserRepo("owner", "name")
+                () -> client.getUserRepo("owner", "repositoryName")
         );
         //then
         assertAll(

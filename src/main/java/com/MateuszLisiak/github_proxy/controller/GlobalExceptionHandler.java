@@ -1,6 +1,6 @@
 package com.MateuszLisiak.github_proxy.controller;
 
-import com.MateuszLisiak.github_proxy.exception.ApplicationException;
+import com.MateuszLisiak.github_proxy.exception.GithubProxyException;
 import com.MateuszLisiak.github_proxy.exception.GithubException;
 import com.MateuszLisiak.github_proxy.model.dto.ErrorDto;
 import feign.RetryableException;
@@ -21,8 +21,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getHttpStatus()).body(errorDto);
     }
 
-    @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorDto> handleApplicationException(ApplicationException ex) {
+    @ExceptionHandler(GithubProxyException.class)
+    public ResponseEntity<ErrorDto> handleApplicationException(GithubProxyException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getStatus(), ex.getMessage(), LocalDateTime.now());
         log.error("ApplicationException: '{}'", ex.getMessage());
         return ResponseEntity.status(ex.getHttpStatus()).body(errorDto);

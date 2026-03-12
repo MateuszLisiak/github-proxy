@@ -36,10 +36,9 @@ public class GithubService {
             throw new RepositoryAlreadyExistsException(owner, repoName);
         }
         GithubRepo githubRepo = githubClient.getUserRepo(owner, repoName);
-        Repo repoEntity = repoMapper.toEntity(githubRepo);
-        repoEntity.setOwner(owner);
-        repoEntity.setName(repoName);
-        Repo savedRepo = repository.save(repoEntity);
+        Repo repo = repoMapper.toEntity(githubRepo);
+        repo.setOwnerAndRepositoryName(githubRepo);
+        Repo savedRepo = repository.save(repo);
         return repoMapper.toDto(savedRepo);
     }
 

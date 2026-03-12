@@ -25,7 +25,6 @@ public class GithubServiceTest {
     RepoMapper repoMapper;
     RepoRepository repoRepository;
 
-
     @BeforeEach
     void setup() {
         this.githubClient = Mockito.mock(GithubClient.class);
@@ -85,7 +84,7 @@ public class GithubServiceTest {
         assertAll(
                 () -> assertEquals(404, exception.getStatus()),
                 () -> assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus()),
-                () -> assertEquals("Repository with name 'testRepo' not found", exception.getMessage())
+                () -> assertEquals("Repository with repositoryName 'testRepo' not found", exception.getMessage())
         );
         verify(repoRepository).getByOwnerAndName(owner, repoName);
         verifyNoMoreInteractions(repoRepository);
@@ -148,7 +147,7 @@ public class GithubServiceTest {
         assertAll(
                 () -> assertEquals(404, exception.getStatus()),
                 () -> assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus()),
-                () -> assertEquals("Repository with name 'repoName' not found", exception.getMessage())
+                () -> assertEquals("Repository with repositoryName 'repoName' not found", exception.getMessage())
         );
     }
 }

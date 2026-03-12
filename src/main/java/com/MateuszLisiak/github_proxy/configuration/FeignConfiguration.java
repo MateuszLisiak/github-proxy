@@ -3,9 +3,11 @@ package com.MateuszLisiak.github_proxy.configuration;
 import feign.Retryer;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+@Configuration
 public class FeignConfiguration {
     @Bean
     public Retryer retryer() {
@@ -14,6 +16,6 @@ public class FeignConfiguration {
 
     @Bean
     public ErrorDecoder errorDecoder() {
-        return new Custom5xxErrorDecoder();
+        return new GithubErrorDecoder();
     }
 }
