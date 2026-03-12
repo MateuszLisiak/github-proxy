@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class RepositoryAlreadyExistsException extends GithubProxyException {
     public RepositoryAlreadyExistsException(String owner, String repoName) {
-        super("Repository '" + owner + "/" + repoName + "' already exists", 409, HttpStatus.CONFLICT);
+        super("Repository '" + owner + "/" + repoName + "' already exists", HttpStatus.CONFLICT);
     }
 }

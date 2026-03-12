@@ -8,9 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface RepoRepository extends JpaRepository<Repo, String> {
-    Optional<Repo> getByOwnerAndName(String owner, String fullName);
+    Optional<Repo> getByOwnerAndRepoName(String owner, String fullName);
 
-    void deleteRepositoryByOwnerAndName(String owner, String repoName);
+    void deleteRepositoryByOwnerAndRepoName(String owner, String repoName);
 
-    boolean existsByOwnerAndName(String owner, String repoName);
+    boolean existsByOwnerAndRepoName(String owner, String repoName);
 }

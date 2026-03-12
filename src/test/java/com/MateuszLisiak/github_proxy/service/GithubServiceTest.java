@@ -61,13 +61,13 @@ public class GithubServiceTest {
         String repoName = "testRepo";
         Repo repo = new Repo();
         repo.setFullName(owner + "/" + repoName);
-        when(repoRepository.getByOwnerAndName(owner, repoName)).thenReturn(Optional.of(repo));
+        when(repoRepository.getByOwnerAndRepoName(owner, repoName)).thenReturn(Optional.of(repo));
         RepoDto result = githubService.getLocalRepo(owner, repoName);
         assertAll(
                 () -> assertNotNull(result),
                 () -> assertEquals(owner + "/" + repoName, result.fullName())
         );
-        verify(repoRepository).getByOwnerAndName(owner, repoName);
+        verify(repoRepository).getByOwnerAndRepoName(owner, repoName);
         verifyNoMoreInteractions(repoRepository);
     }
 
@@ -76,40 +76,38 @@ public class GithubServiceTest {
         String owner = "testOwner";
         String repoName = "testRepo";
 
-        when(repoRepository.getByOwnerAndName(owner, repoName)).thenReturn(Optional.empty());
+        when(repoRepository.getByOwnerAndRepoName(owner, repoName)).thenReturn(Optional.empty());
 
         RepositoryNotFoundException exception = assertThrows(RepositoryNotFoundException.class,
                 () -> githubService.getLocalRepo(owner, repoName)
         );
         assertAll(
-                () -> assertEquals(404, exception.getStatus()),
                 () -> assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus()),
                 () -> assertEquals("Repository with repositoryName 'testRepo' not found", exception.getMessage())
         );
-        verify(repoRepository).getByOwnerAndName(owner, repoName);
+        verify(repoRepository).getByOwnerAndRepoName(owner, repoName);
         verifyNoMoreInteractions(repoRepository);
     }
 
     @Test
     void postGithubRepo_Success_ShouldSaveAndReturnRepoDto() {
         GithubRepo githubRepo = new GithubRepo("owner/repoName", "desc", null, null, null);
-        when(repoRepository.existsByOwnerAndName("owner", "repoName")).thenReturn(false);
+        when(repoRepository.existsByOwnerAndRepoName("owner", "repoName")).thenReturn(false);
         when(githubClient.getUserRepo("owner", "repoName")).thenReturn(githubRepo);
         when(repoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
         RepoDto result = githubService.postGithubRepo("owner", "repoName");
         assertNotNull(result);
-        verify(repoRepository).existsByOwnerAndName("owner", "repoName");
+        verify(repoRepository).existsByOwnerAndRepoName("owner", "repoName");
         verify(githubClient).getUserRepo("owner", "repoName");
         verify(repoRepository).save(any());
     }
 
     @Test
     void postGithubRepo_AlreadyExists_ShouldThrowRepositoryAlreadyExistsException() {
-        when(repoRepository.existsByOwnerAndName("owner", "repoName")).thenReturn(true);
+        when(repoRepository.existsByOwnerAndRepoName("owner", "repoName")).thenReturn(true);
         RepositoryAlreadyExistsException exception = assertThrows(RepositoryAlreadyExistsException.class,
                 () -> githubService.postGithubRepo("owner", "repoName"));
         assertAll(
-                () -> assertEquals(409, exception.getStatus()),
                 () -> assertEquals(HttpStatus.CONFLICT, exception.getHttpStatus()),
                 () -> assertEquals("Repository 'owner/repoName' already exists", exception.getMessage())
         );
@@ -120,12 +118,12 @@ public class GithubServiceTest {
     void putRepo_Success_ShouldUpdateAndReturnRepoDto() {
         Repo repo = new Repo();
         GithubRepo githubRepo = new GithubRepo("owner/repoName", "updatedDesc", null, null, null);
-        when(repoRepository.getByOwnerAndName("owner", "repoName")).thenReturn(Optional.of(repo));
+        when(repoRepository.getByOwnerAndRepoName("owner", "repoName")).thenReturn(Optional.of(repo));
         when(githubClient.getUserRepo("owner", "repoName")).thenReturn(githubRepo);
         when(repoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
         RepoDto result = githubService.putRepo("owner", "repoName");
         assertNotNull(result);
-        verify(repoRepository).getByOwnerAndName("owner", "repoName");
+        verify(repoRepository).getByOwnerAndRepoName("owner", "repoName");
         verify(githubClient).getUserRepo("owner", "repoName");
         verify(repoRepository).save(repo);
     }
@@ -133,19 +131,18 @@ public class GithubServiceTest {
     @Test
     void deleteRepo_Success_ShouldCallDelete() {
         Repo repo = new Repo();
-        when(repoRepository.getByOwnerAndName("owner", "repoName")).thenReturn(Optional.of(repo));
+        when(repoRepository.getByOwnerAndRepoName("owner", "repoName")).thenReturn(Optional.of(repo));
         githubService.deleteRepo("owner", "repoName");
-        verify(repoRepository).getByOwnerAndName("owner", "repoName");
-        verify(repoRepository).deleteRepositoryByOwnerAndName("owner", "repoName");
+        verify(repoRepository).getByOwnerAndRepoName("owner", "repoName");
+        verify(repoRepository).deleteRepositoryByOwnerAndRepoName("owner", "repoName");
     }
 
     @Test
     void deleteRepo_NotFound_ShouldThrowRepositoryNotFoundException() {
-        when(repoRepository.getByOwnerAndName("owner", "repoName")).thenReturn(Optional.empty());
+        when(repoRepository.getByOwnerAndRepoName("owner", "repoName")).thenReturn(Optional.empty());
         RepositoryNotFoundException exception = assertThrows(RepositoryNotFoundException.class,
                 () -> githubService.deleteRepo("owner", "repoName"));
         assertAll(
-                () -> assertEquals(404, exception.getStatus()),
                 () -> assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus()),
                 () -> assertEquals("Repository with repositoryName 'repoName' not found", exception.getMessage())
         );

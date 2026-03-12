@@ -23,7 +23,7 @@ public class Repo {
     private Integer stars;
     private LocalDateTime createdAt;
     private String owner;
-    private String repositoryName;
+    private String repoName;
 
     public void update(GithubRepo repo, String owner, String repoName) {
         this.fullName = repo.fullName();
@@ -32,12 +32,12 @@ public class Repo {
         this.stars = repo.stars();
         this.createdAt = repo.createdAt();
         this.owner = owner;
-        this.repositoryName = repoName;
+        this.repoName = repoName;
     }
 
     public void setOwnerAndRepositoryName(GithubRepo githubRepo) {
         this.owner = getOwnerNameFromFullName(githubRepo.fullName());
-        this.repositoryName = getRepositoryNameFromFullName(githubRepo.fullName());
+        this.repoName = getRepositoryNameFromFullName(githubRepo.fullName());
     }
 
     private String getOwnerNameFromFullName(String fullName) {

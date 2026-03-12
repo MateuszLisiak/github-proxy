@@ -60,8 +60,7 @@ public class GithubControllerTest {
                 .thenThrow(new RepositoryNotFoundException(repoName));
         mockMvc.perform(get("/local/repositories/testOwner/notFoundRepo"))
                 .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -88,8 +87,7 @@ public class GithubControllerTest {
                 .when(githubService).deleteRepo("owner", "repoName");
         mockMvc.perform(delete("/repositories/owner/repoName"))
                 .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -109,7 +107,6 @@ public class GithubControllerTest {
         mockMvc.perform(post("/repositories/owner/repoName"))
                 .andDo(print())
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.status").value(409))
                 .andExpect(jsonPath("$.message").value("Repository 'owner/repoName' already exists"));
     }
 }

@@ -1,16 +1,15 @@
 package com.MateuszLisiak.github_proxy.client;
 
-import com.MateuszLisiak.github_proxy.exception.GithubException;
 import com.MateuszLisiak.github_proxy.model.GithubRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import feign.FeignException;
 import feign.RetryableException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -53,19 +52,18 @@ public class GithubClientTest {
     }
 
     @Test
-    void getUserRepo_NotFound_ShouldThrowGithubException() {
+    void getUserRepo_NotFound_ShouldThrowFeignException() {
         //given
         wireMockServer.stubFor(get("/repos/owner/repositoryName")
                 .willReturn(aResponse().withStatus(404)));
         //when
-        GithubException exception = assertThrows(
-                GithubException.class,
+        FeignException exception = assertThrows(
+                FeignException.class,
                 () -> client.getUserRepo("owner", "repositoryName")
         );
         //then
         assertAll(
-                () -> assertEquals(404, exception.getStatus()),
-                () -> assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus())
+                () -> assertEquals(404, exception.status())
         );
     }
 
@@ -81,19 +79,18 @@ public class GithubClientTest {
     }
 
     @Test
-    void getUserRepo_ServerError_ShouldThrowGithubException() {
+    void getUserRepo_ServerError_ShouldThrowFeignException() {
         //given
         wireMockServer.stubFor(get("/repos/owner/repositoryName")
                 .willReturn(aResponse().withStatus(500)));
         //when
-        GithubException exception = assertThrows(
-                GithubException.class,
+        FeignException exception = assertThrows(
+                FeignException.class,
                 () -> client.getUserRepo("owner", "repositoryName")
         );
         //then
         assertAll(
-                () -> assertEquals(500, exception.getStatus()),
-                () -> assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getHttpStatus())
+                () -> assertEquals(500, exception.status())
         );
     }
 }
